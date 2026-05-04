@@ -22,6 +22,8 @@ const EventDetail = () => {
     enabled: !!id,
   });
 
+  const { rsvp, busy, create, cancel } = useMyRsvp(id);
+
   if (isLoading) {
     return (
       <section className="container py-8 sm:py-12 max-w-4xl">
