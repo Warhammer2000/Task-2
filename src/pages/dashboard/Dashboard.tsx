@@ -73,8 +73,9 @@ const Dashboard = () => {
           supabase.from("rsvps").select("tickets ( checked_in_at )").eq("event_id", e.id),
         ]);
         const checkedIn = (tickets ?? []).reduce((acc, r) => {
-          const t = (r as unknown as { tickets?: Array<{ checked_in_at: string | null }> | null }).tickets ?? [];
-          return acc + t.filter((x) => x.checked_in_at).length;
+          const raw = (r as unknown as { tickets?: Array<{ checked_in_at: string | null }> | { checked_in_at: string | null } | null }).tickets;
+          const arr = Array.isArray(raw) ? raw : raw ? [raw] : [];
+          return acc + arr.filter((x) => x.checked_in_at).length;
         }, 0);
         return {
           ...e,
