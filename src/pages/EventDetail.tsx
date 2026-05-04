@@ -59,13 +59,27 @@ const EventDetail = () => {
   const desc = event.description ?? "";
   const shortDesc = desc.length > 160 ? desc.slice(0, 157) + "…" : desc;
 
-  const handleRsvp = () => {
+  const handleRsvp = async () => {
     if (!user) {
       navigate(`/auth/sign-in?redirect=${encodeURIComponent(location.pathname)}`);
       return;
     }
-    // RSVP transaction lives in Phase 3 — wire up CTA target there.
-    navigate(`/events/${event.id}?rsvp=pending`, { replace: true });
+    const res = await create();
+    if (!res.ok) {
+      toast.error(res.error || "RSVP failed");
+      return;
+    }
+    if (res.status === "confirmed") {
+      toast.success("RSVP confirmed — ticket issued.");
+    } else if (res.status === "waitlist") {
+      toast.message(`Added to waitlist · position #${res.position}`);
+    }
+  };
+
+  const handleCancel = async () => {
+    const res = await cancel();
+    if (!res.ok) toast.error(res.error || "Cancel failed");
+    else toast.success("RSVP cancelled.");
   };
 
   return (
