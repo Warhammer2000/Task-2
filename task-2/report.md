@@ -143,9 +143,11 @@ This is the technique I'd reuse for any production-leaning Lovable build: **plan
 
 This submission is not perfect. Known limitations:
 
+- **OG / Twitter Card tags are static site-level, not dynamic per event/host.** The HTML response from any event or host URL contains correct OG and Twitter Card meta tags, but they reflect the site-level title and description rather than the specific event/host — a known limitation of SPAs that inject dynamic meta tags client-side via `react-helmet-async`. Crawlers that execute JavaScript (Twitterbot since 2022, some others) will see the correct dynamic values; static crawlers (Facebook, LinkedIn link previews) will see the site default. Resolving this would require server-side rendering (Vite SSR or pre-rendering at build time per route) — out of scope for this iteration.
 - Member invite scope is owner-only (brief says "Hosts" — minor literal deviation).
-- Excel compatibility was verified with English-only seed data; cyrillic / extended UTF-8 round-trip not exhaustively tested (BOM in place; should work).
+- Excel compatibility was verified with English-only seed data; cyrillic / extended UTF-8 round-trip not exhaustively tested (the committed `sample-export.csv` is ASCII so the BOM, while emitted by the edge function for live exports, is not visible in the static sample).
 - Multi-user end-to-end FIFO test was performed via static review of the SQL function + 1-user UI test, not via 4 concurrent browser sessions — the white-box review found no defects.
 - Mobile responsive was verified at 375 / 768 / 1024 but not on physical devices.
+- Lovable two-way GitHub sync was intentionally broken at submission time when the working repo was renamed (`event-hub-collective-84062154` → `Task-2`) and restructured into a `task-2/` subfolder per the brief. Pre-restructure, Lovable's sync worked end-to-end through Phase 7.
 
 The one-shot rule means there is no resubmit. The intention is "genuine effort, well-structured, attempts the full scope" — not "every requirement perfectly". I am confident the foundation is correct and the user-visible flows work; the limitations above are honest, scoped, and called out.
