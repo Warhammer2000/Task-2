@@ -226,6 +226,9 @@ const Dashboard = () => {
             <Button asChild variant="ghost" size="sm" className="font-mono-accent">
               <Link to={`/dashboard/events/${e.id}/checkin`}>check-in</Link>
             </Button>
+            <Button asChild variant="ghost" size="sm" className="font-mono-accent">
+              <Link to={`/dashboard/events/${e.id}/gallery-review`}>gallery</Link>
+            </Button>
           </div>
         </div>
       </article>
