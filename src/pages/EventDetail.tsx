@@ -65,7 +65,7 @@ const EventDetail = () => {
       return;
     }
     const res = await create();
-    if (!res.ok) {
+    if (res.ok === false) {
       toast.error(res.error || "RSVP failed");
       return;
     }
@@ -78,7 +78,7 @@ const EventDetail = () => {
 
   const handleCancel = async () => {
     const res = await cancel();
-    if (res.ok) toast.success("RSVP cancelled.");
+    if (res.ok === true) toast.success("RSVP cancelled.");
     else toast.error(res.error || "Cancel failed");
   };
 
