@@ -48,12 +48,13 @@ Deno.serve(async (req) => {
   const eventId = parts[parts.length - 1];
 
   // Public-facing site origin for canonical + redirect targets.
-  // The function may be hosted at *.supabase.co, but humans should land on
-  // the real app domain. Allow override via PUBLIC_SITE_URL secret; otherwise
-  // fall back to the request origin (still functional, just less branded).
+  // The function is hosted at *.supabase.co, but humans must land on the real
+  // app domain. Allow override via PUBLIC_SITE_URL secret if ever configured;
+  // otherwise hardcode the deployed app domain so og:url and the redirect
+  // target are correct out of the box.
   const configuredSite = Deno.env.get("PUBLIC_SITE_URL");
   const origin = (configuredSite && configuredSite.replace(/\/$/, "")) ||
-    `https://${url.host}`;
+    "https://task-2.lovable.app";
   const fallbackImage = `${origin}/placeholder.svg`;
   const siteName = "Null Collective";
 
