@@ -87,8 +87,10 @@ Deno.serve(async (req) => {
   const rows: string[] = [];
   rows.push(["name", "email", "rsvp_status", "checked_in_at"].join(","));
   for (const r of (rsvps ?? [])) {
-    const profile = (r as unknown as { profiles?: { display_name?: string | null } | null }).profiles;
-    const tickets = (r as unknown as { tickets?: Array<{ checked_in_at: string | null }> | null }).tickets ?? [];
+    const profileRaw = (r as unknown as { profiles?: { display_name?: string | null } | { display_name?: string | null }[] | null }).profiles;
+    const profile = Array.isArray(profileRaw) ? profileRaw[0] : profileRaw;
+    const ticketsRaw = (r as unknown as { tickets?: Array<{ checked_in_at: string | null }> | { checked_in_at: string | null } | null }).tickets;
+    const tickets = Array.isArray(ticketsRaw) ? ticketsRaw : ticketsRaw ? [ticketsRaw] : [];
     const checkedIn = tickets.find((t) => t.checked_in_at)?.checked_in_at ?? "";
     rows.push([
       csvEscape(profile?.display_name ?? ""),
