@@ -161,18 +161,52 @@ const EventDetail = () => {
           </div>
         )}
 
-        {/* RSVP CTA — entirely hidden when ended (R hard rule, not just disabled) */}
+        {/* RSVP / status block — entirely hidden when ended (hard rule, not disabled) */}
         {!ended && (
-          <div className="sticky bottom-3 sm:static z-10 border border-primary/40 rounded-md bg-card/80 backdrop-blur p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-glow">
-            <div>
+          <div className="sticky bottom-3 sm:static z-10 border border-primary/40 rounded-md bg-card/80 backdrop-blur p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 shadow-glow">
+            <div className="min-w-0">
               <p className="font-mono-accent text-xs text-muted-foreground">$ rsvp</p>
-              <p className="text-sm sm:text-base">
-                {user ? "secure your spot — first-come, first-served" : "sign in to reserve a spot"}
-              </p>
+              {!user && <p className="text-sm sm:text-base">sign in to reserve a spot</p>}
+              {user && !rsvp && (
+                <p className="text-sm sm:text-base">first-come, first-served — capacity {event.capacity || "∞"}</p>
+              )}
+              {user && rsvp?.status === "confirmed" && (
+                <p className="text-sm sm:text-base flex items-center gap-2 text-primary">
+                  <CheckCircle2 className="h-4 w-4" /> confirmed — see <Link to="/my/tickets" className="underline">your ticket</Link>
+                </p>
+              )}
+              {user && rsvp?.status === "waitlist" && (
+                <p className="text-sm sm:text-base flex items-center gap-2 text-secondary">
+                  <Clock3 className="h-4 w-4" /> on waitlist · position #{rsvp.position}
+                </p>
+              )}
+              {user && rsvp?.status === "cancelled" && (
+                <p className="text-sm sm:text-base text-muted-foreground">your previous RSVP was cancelled — you can re-RSVP.</p>
+              )}
             </div>
-            <Button onClick={handleRsvp} size="lg" className="font-mono-accent shadow-glow w-full sm:w-auto">
-              {user ? "rsvp →" : "sign in to rsvp →"}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+              {(!user || !rsvp || rsvp.status === "cancelled") && (
+                <Button
+                  onClick={handleRsvp}
+                  size="lg"
+                  disabled={busy}
+                  className="font-mono-accent shadow-glow w-full sm:w-auto"
+                >
+                  {user ? (busy ? "..." : "rsvp →") : "sign in to rsvp →"}
+                </Button>
+              )}
+              {user && rsvp && rsvp.status !== "cancelled" && (
+                <Button
+                  onClick={handleCancel}
+                  size="lg"
+                  variant="outline"
+                  disabled={busy}
+                  className="font-mono-accent w-full sm:w-auto"
+                >
+                  <X className="h-4 w-4 mr-1" /> cancel rsvp
+                </Button>
+              )}
+            </div>
           </div>
         )}
         {ended && (
