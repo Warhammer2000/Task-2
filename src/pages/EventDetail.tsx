@@ -217,6 +217,15 @@ const EventDetail = () => {
             this event has ended. rsvps are closed.
           </div>
         )}
+
+        {/* Phase 6: gallery + feedback */}
+        <EventGallery eventId={event.id} />
+        <EventFeedback eventId={event.id} endAt={event.end_at} />
+
+        {/* Phase 6: report this event */}
+        <div className="mt-10 pt-6 border-t border-border/60 flex justify-end">
+          <ReportButton targetType="event" targetId={event.id} />
+        </div>
       </article>
     </>
   );
