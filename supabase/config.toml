@@ -2,3 +2,6 @@ project_id = "thctldrhjjyhxaigwvak"
 
 [functions.og-event]
 verify_jwt = false
+
+[functions.og-host]
+verify_jwt = false
