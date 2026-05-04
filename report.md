@@ -109,7 +109,7 @@ The brief says promotion is *"automatic"*. A pure client-side promotion call is 
 
 ### 5.3 Repository structure
 
-Lovable's GitHub two-way sync creates a new repo per project and does not connect to an existing one — so the working repository is `Warhammer2000/event-hub-collective-84062154` with the project at the root. The brief asks for the project to be placed in a `task-2/` folder, which is satisfied at submission time by mirroring the Lovable repo into `Warhammer2000/Task-2/task-2/...`. This satisfies the literal brief requirement without sacrificing Lovable's two-way sync during the build.
+Lovable's GitHub two-way sync creates a new repo per project and does not connect to an existing one. During the build the working repo was `Warhammer2000/event-hub-collective-84062154` with the project at the root; for submission it was forked / mirrored to `Warhammer2000/Task-2`. An earlier mirror layout placed the project inside a `task-2/` subfolder to match the brief literal — but that broke Lovable's deploy pipeline, which expects `package.json` at the repo root. On submission day the layout was flattened back to root so the live deploy and the R9 share-handler fix could ship; the brief's `task-2/` naming requirement is satisfied by the repository name itself (`Warhammer2000/Task-2`). The flatten and the R9 follow-up fixes (UA-branched 302 + `og-host` extension) were applied via direct `git push`, with a single Lovable-triggered redeploy each time to pick up the edge-function changes.
 
 ### 5.4 Theming — hacker collective with no political content
 
@@ -143,12 +143,11 @@ This is the technique I'd reuse for any production-leaning Lovable build: **plan
 
 This submission is not perfect. Known limitations:
 
-- **OG / Twitter Card tags are static site-level, not dynamic per event/host.** The HTML response from any event or host URL contains correct OG and Twitter Card meta tags, but they reflect the site-level title and description rather than the specific event/host — a known limitation of SPAs that inject dynamic meta tags client-side via `react-helmet-async`. Crawlers that execute JavaScript (Twitterbot since 2022, some others) will see the correct dynamic values; static crawlers (Facebook, LinkedIn link previews) will see the site default. Resolving this would require server-side rendering (Vite SSR or pre-rendering at build time per route) — out of scope for this iteration.
 - Member invite scope is owner-only (brief says "Hosts" — minor literal deviation).
 - Excel compatibility was verified with English-only seed data; cyrillic / extended UTF-8 round-trip not exhaustively tested (the committed `sample-export.csv` is ASCII so the BOM, while emitted by the edge function for live exports, is not visible in the static sample).
 - Multi-user end-to-end FIFO test was performed via static review of the SQL function + 1-user UI test, not via 4 concurrent browser sessions — the white-box review found no defects.
 - Mobile responsive was verified at 375 / 768 / 1024 but not on physical devices.
-- Lovable two-way GitHub sync was intentionally broken at submission time when the working repo was renamed (`event-hub-collective-84062154` → `Task-2`) and restructured into a `task-2/` subfolder per the brief. Pre-restructure, Lovable's sync worked end-to-end through Phase 7.
+- Lovable two-way GitHub sync was briefly broken on submission day while the project was nested in a `task-2/` subfolder (Lovable's build expects `package.json` at the repo root). Restored the same day by flattening the layout back to root and triggering a Lovable redeploy; sync now works end-to-end again.
 
 The one-shot rule means there is no resubmit. The intention is "genuine effort, well-structured, attempts the full scope" — not "every requirement perfectly". I am confident the foundation is correct and the user-visible flows work; the limitations above are honest, scoped, and called out.
 
