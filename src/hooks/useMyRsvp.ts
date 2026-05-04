@@ -51,23 +51,28 @@ export function useMyRsvp(eventId: string | undefined) {
     reload();
   }, [reload]);
 
-  const create = useCallback(async () => {
-    if (!eventId || !session) return { ok: false, error: "unauthenticated" as const };
+  type CreateResult =
+    | { ok: true; status: RsvpStatus; position: number | null }
+    | { ok: false; error: string };
+  const create = useCallback(async (): Promise<CreateResult> => {
+    if (!eventId || !session) return { ok: false, error: "unauthenticated" };
     setBusy(true);
     try {
       const { data, error } = await supabase.functions.invoke("rsvp-create", {
         body: { event_id: eventId },
       });
       if (error) return { ok: false, error: error.message };
+      const d = data as { status: RsvpStatus; position: number | null };
       await reload();
-      return { ok: true, ...(data as { status: RsvpStatus; position: number | null }) };
+      return { ok: true, status: d.status, position: d.position };
     } finally {
       setBusy(false);
     }
   }, [eventId, session, reload]);
 
-  const cancel = useCallback(async () => {
-    if (!rsvp || !session) return { ok: false };
+  type CancelResult = { ok: true } | { ok: false; error: string };
+  const cancel = useCallback(async (): Promise<CancelResult> => {
+    if (!rsvp || !session) return { ok: false, error: "no_rsvp" };
     setBusy(true);
     try {
       const { error } = await supabase.functions.invoke("rsvp-cancel", {
