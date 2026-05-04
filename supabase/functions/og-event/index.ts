@@ -37,6 +37,15 @@ function truncate(s: string, n: number): string {
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+// Recognise common social/preview crawlers. If the UA matches, we serve SSR
+// HTML so the bot can read og:* tags. Everything else (browsers, curl, etc.)
+// gets a server-level 302 redirect to the SPA — Supabase's Edge Functions
+// runtime forces Content-Type: text/plain + CSP sandbox on response bodies,
+// which prevents browsers from rendering inline meta-refresh HTML, so we
+// must redirect at the HTTP layer instead.
+const CRAWLER_UA_RE =
+  /bot|crawler|spider|facebookexternalhit|whatsapp|telegrambot|slackbot|skype|pinterest|discordbot|twitterbot|linkedin|googlebot|bingbot|applebot|embedly|quora link preview|outbrain|vkshare|w3c_validator|redditbot/i;
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -58,7 +67,28 @@ Deno.serve(async (req) => {
   const fallbackImage = `${origin}/placeholder.svg`;
   const siteName = "Null Collective";
 
-  if (!eventId || !UUID_RE.test(eventId)) {
+  const userAgent = req.headers.get("user-agent") || "";
+  const isCrawler = CRAWLER_UA_RE.test(userAgent);
+
+  // Compute the SPA target URL up front so the human-redirect path is trivial.
+  const validId = !!eventId && UUID_RE.test(eventId);
+  const spaTarget = validId ? `${origin}/events/${eventId}` : origin;
+
+  // Humans (and any non-crawler client) get a 302 to the SPA. This bypasses
+  // Supabase's text/plain + sandbox CSP on response bodies entirely — a 302
+  // has no rendered body for the browser to refuse.
+  if (!isCrawler) {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        ...corsHeaders,
+        Location: spaTarget,
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
+  if (!validId) {
     return new Response(renderHtml({
       title: siteName,
       description: "Events for the underground.",
