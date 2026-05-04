@@ -49,30 +49,36 @@ const MyTickets = () => {
         setRows([]);
         return;
       }
-      const flat: TicketRow[] = data
+      const flat: TicketRow[] = (data as unknown as Array<{
+        id: string;
+        status: TicketRow["status"];
+        position: number | null;
+        event_id: string;
+        events: {
+          id: string; title: string; description: string | null;
+          start_at: string; end_at: string; timezone: string;
+          venue_address: string | null; venue_online_link: string | null;
+        };
+        tickets: { id: string; code: string }[] | { id: string; code: string } | null;
+      }>)
         .map((r) => {
-          const ev = (r as { events: TicketRow extends infer X ? X : never }).events as unknown as {
-            id: string; title: string; description: string | null;
-            start_at: string; end_at: string; timezone: string;
-            venue_address: string | null; venue_online_link: string | null;
-          };
-          const ticket = Array.isArray(r.tickets) ? r.tickets[0] : (r.tickets as { id: string; code: string } | null);
+          const ticket = Array.isArray(r.tickets) ? r.tickets[0] : r.tickets;
           if (!ticket) return null;
           return {
             ticket_id: ticket.id,
             ticket_code: ticket.code,
             rsvp_id: r.id,
-            status: r.status as TicketRow["status"],
+            status: r.status,
             position: r.position,
-            event_id: ev.id,
-            event_title: ev.title,
-            event_description: ev.description,
-            start_at: ev.start_at,
-            end_at: ev.end_at,
-            timezone: ev.timezone,
-            venue_address: ev.venue_address,
-            venue_online_link: ev.venue_online_link,
-          } as TicketRow;
+            event_id: r.events.id,
+            event_title: r.events.title,
+            event_description: r.events.description,
+            start_at: r.events.start_at,
+            end_at: r.events.end_at,
+            timezone: r.events.timezone,
+            venue_address: r.events.venue_address,
+            venue_online_link: r.events.venue_online_link,
+          } satisfies TicketRow;
         })
         .filter((x): x is TicketRow => x !== null);
       setRows(flat);
