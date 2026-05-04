@@ -78,8 +78,8 @@ const EventDetail = () => {
 
   const handleCancel = async () => {
     const res = await cancel();
-    if (!res.ok) toast.error(res.error || "Cancel failed");
-    else toast.success("RSVP cancelled.");
+    if (res.ok) toast.success("RSVP cancelled.");
+    else toast.error(res.error || "Cancel failed");
   };
 
   return (
