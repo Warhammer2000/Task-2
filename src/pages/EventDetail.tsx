@@ -7,7 +7,7 @@ import { EndedPill, LivePill } from "@/components/events/EndedPill";
 import { fetchEventById, formatEventWindow, isEnded } from "@/lib/events";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMyRsvp } from "@/hooks/useMyRsvp";
-import { CalendarClock, MapPin, Globe2, Users, Lock, CheckCircle2, Clock3, X } from "lucide-react";
+import { CalendarClock, MapPin, Globe2, Users, Lock, CheckCircle2, Clock3, X, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { EventGallery } from "@/components/community/EventGallery";
 import { EventFeedback } from "@/components/community/EventFeedback";
