@@ -114,18 +114,38 @@ const EventDetail = () => {
         </div>
 
         {/* Header */}
-        <header className="mb-6">
-          {host && (
-            <Link
-              to={`/hosts/${host.slug}`}
-              className="font-mono-accent text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              ./{host.slug}
-            </Link>
-          )}
-          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl text-glow text-primary mt-1 leading-tight">
-            {event.title}
-          </h1>
+        <header className="mb-6 flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            {host && (
+              <Link
+                to={`/hosts/${host.slug}`}
+                className="font-mono-accent text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                ./{host.slug}
+              </Link>
+            )}
+            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl text-glow text-primary mt-1 leading-tight">
+              {event.title}
+            </h1>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="font-mono-accent shrink-0"
+            onClick={async () => {
+              const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+              const shareUrl = `https://${projectId}.supabase.co/functions/v1/og-event/${event.id}`;
+              try {
+                await navigator.clipboard.writeText(shareUrl);
+                toast.success("share link copied", { description: "rich previews on twitter / slack / telegram" });
+              } catch {
+                toast.error("copy failed", { description: shareUrl });
+              }
+            }}
+            aria-label="copy share link"
+          >
+            <Share2 className="h-4 w-4 mr-1" /> share
+          </Button>
         </header>
 
         {/* Meta grid */}
