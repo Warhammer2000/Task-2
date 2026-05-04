@@ -9,6 +9,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useMyRsvp } from "@/hooks/useMyRsvp";
 import { CalendarClock, MapPin, Globe2, Users, Lock, CheckCircle2, Clock3, X } from "lucide-react";
 import { toast } from "sonner";
+import { EventGallery } from "@/components/community/EventGallery";
+import { EventFeedback } from "@/components/community/EventFeedback";
+import { ReportButton } from "@/components/community/ReportButton";
 
 const EventDetail = () => {
   const { id } = useParams();
@@ -214,6 +217,15 @@ const EventDetail = () => {
             this event has ended. rsvps are closed.
           </div>
         )}
+
+        {/* Phase 6: gallery + feedback */}
+        <EventGallery eventId={event.id} />
+        <EventFeedback eventId={event.id} endAt={event.end_at} />
+
+        {/* Phase 6: report this event */}
+        <div className="mt-10 pt-6 border-t border-border/60 flex justify-end">
+          <ReportButton targetType="event" targetId={event.id} />
+        </div>
       </article>
     </>
   );
