@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { VMaskAvatar } from "@/components/VMaskAvatar";
 import { Button } from "@/components/ui/button";
+import { NotificationBanner } from "@/components/NotificationBanner";
 
 export function SiteShell({ children }: { children: ReactNode }) {
   const { user, signOut } = useAuth();
@@ -63,10 +64,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
       <footer className="border-t border-border/60 mt-12">
         <div className="container py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-mono-accent text-muted-foreground">
-          <span>$ null_collective --version 0.1.0</span>
+          <span>$ null_collective --version 0.3.0</span>
           <span>events for the underground · stay clean, stay curious</span>
         </div>
       </footer>
+
+      <NotificationBanner />
     </div>
   );
 }

@@ -522,6 +522,8 @@ export type Database = {
         Args: { _host_id: string; _user_id: string }
         Returns: boolean
       }
+      next_waitlist_position: { Args: { _event_id: string }; Returns: number }
+      promote_waitlist: { Args: { _event_id: string }; Returns: number }
     }
     Enums: {
       app_role: "host" | "checker"
