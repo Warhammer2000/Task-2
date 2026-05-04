@@ -47,7 +47,13 @@ Deno.serve(async (req) => {
   const parts = url.pathname.split("/").filter(Boolean);
   const eventId = parts[parts.length - 1];
 
-  const origin = `${url.protocol}//${url.host}`;
+  // Public-facing site origin for canonical + redirect targets.
+  // The function may be hosted at *.supabase.co, but humans should land on
+  // the real app domain. Allow override via PUBLIC_SITE_URL secret; otherwise
+  // fall back to the request origin (still functional, just less branded).
+  const configuredSite = Deno.env.get("PUBLIC_SITE_URL");
+  const origin = (configuredSite && configuredSite.replace(/\/$/, "")) ||
+    `${url.protocol}//${url.host}`;
   const fallbackImage = `${origin}/placeholder.svg`;
   const siteName = "Null Collective";
 
