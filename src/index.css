@@ -2,95 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* =====================================================================
+   Null Collective design system — phosphor terminal aesthetic.
+   All colors HSL. No raw color classes in components — use tokens.
+   ===================================================================== */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Dark phosphor palette is the default — light theme mirrored for fallback */
+    --background: 130 18% 5%;
+    --foreground: 140 80% 88%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 130 16% 7%;
+    --card-foreground: 140 80% 88%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 130 18% 6%;
+    --popover-foreground: 140 80% 88%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Phosphor green — terminal CRT */
+    --primary: 145 95% 55%;
+    --primary-foreground: 130 30% 6%;
+    --primary-glow: 145 100% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Muted cyan secondary */
+    --secondary: 180 60% 50%;
+    --secondary-foreground: 130 30% 6%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 130 12% 12%;
+    --muted-foreground: 140 20% 60%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 320 80% 60%;        /* magenta accent */
+    --accent-foreground: 130 30% 6%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 140 30% 18%;
+    --input: 140 25% 14%;
+    --ring: 145 95% 55%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Gradients & shadows */
+    --gradient-phosphor: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    --gradient-scanline: linear-gradient(180deg, transparent 50%, hsl(var(--primary) / 0.04) 50%);
+    --shadow-glow: 0 0 24px hsl(var(--primary) / 0.35), 0 0 60px hsl(var(--primary) / 0.15);
+    --shadow-soft: 0 4px 24px -8px hsl(130 50% 2% / 0.6);
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar (keep shadcn defaults wired) */
+    --sidebar-background: 130 16% 7%;
+    --sidebar-foreground: 140 80% 88%;
+    --sidebar-primary: 145 95% 55%;
+    --sidebar-primary-foreground: 130 30% 6%;
+    --sidebar-accent: 130 12% 12%;
+    --sidebar-accent-foreground: 140 80% 88%;
+    --sidebar-border: 140 30% 18%;
+    --sidebar-ring: 145 95% 55%;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  /* Light fallback (jury/print/system pref) — kept readable but discouraged */
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 130 30% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 130 30% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 130 30% 8%;
+    --primary: 145 70% 30%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 145 70% 40%;
+    --secondary: 180 40% 35%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 130 10% 92%;
+    --muted-foreground: 130 15% 35%;
+    --accent: 320 60% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 75% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 130 15% 85%;
+    --input: 130 15% 90%;
+    --ring: 145 70% 30%;
   }
 }
 
@@ -99,7 +90,47 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    color-scheme: dark;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "ss01", "cv11";
+    background-image:
+      radial-gradient(ellipse at top, hsl(var(--primary) / 0.06), transparent 60%),
+      radial-gradient(ellipse at bottom right, hsl(var(--accent) / 0.04), transparent 60%);
+    min-height: 100vh;
+  }
+
+  /* Subtle CRT scanlines overlay — opt-in via .crt class */
+  .crt {
+    position: relative;
+  }
+  .crt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--gradient-scanline);
+    background-size: 100% 4px;
+    mix-blend-mode: overlay;
+    opacity: 0.5;
+  }
+
+  /* Monospace utility for codes/numbers/timestamps */
+  .font-mono-accent {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    letter-spacing: 0.01em;
+  }
+
+  /* Phosphor text glow */
+  .text-glow {
+    text-shadow: 0 0 12px hsl(var(--primary) / 0.6), 0 0 24px hsl(var(--primary) / 0.3);
+  }
+
+  /* ASCII empty-state preformatted block */
+  .ascii-empty {
+    @apply font-mono-accent text-muted-foreground whitespace-pre leading-tight text-xs sm:text-sm;
   }
 }
