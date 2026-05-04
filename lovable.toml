@@ -1,2 +1,0 @@
-[run]
-dev = "cd task-2 && npm run dev"
