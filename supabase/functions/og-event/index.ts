@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
   // fall back to the request origin (still functional, just less branded).
   const configuredSite = Deno.env.get("PUBLIC_SITE_URL");
   const origin = (configuredSite && configuredSite.replace(/\/$/, "")) ||
-    `${url.protocol}//${url.host}`;
+    `https://${url.host}`;
   const fallbackImage = `${origin}/placeholder.svg`;
   const siteName = "Null Collective";
 
