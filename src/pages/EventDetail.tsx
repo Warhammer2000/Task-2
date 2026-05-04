@@ -6,7 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EndedPill, LivePill } from "@/components/events/EndedPill";
 import { fetchEventById, formatEventWindow, isEnded } from "@/lib/events";
 import { useAuth } from "@/contexts/AuthContext";
-import { CalendarClock, MapPin, Globe2, Users, Lock } from "lucide-react";
+import { useMyRsvp } from "@/hooks/useMyRsvp";
+import { CalendarClock, MapPin, Globe2, Users, Lock, CheckCircle2, Clock3, X } from "lucide-react";
+import { toast } from "sonner";
 
 const EventDetail = () => {
   const { id } = useParams();
