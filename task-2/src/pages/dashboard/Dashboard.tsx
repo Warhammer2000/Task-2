@@ -250,6 +250,9 @@ const Dashboard = () => {
               <Button asChild variant="outline" className="font-mono-accent">
                 <Link to="/dashboard/members">members</Link>
               </Button>
+              <Button asChild variant="outline" className="font-mono-accent">
+                <Link to="/dashboard/reports">reports</Link>
+              </Button>
               <Button asChild className="font-mono-accent shadow-glow">
                 <Link to="/dashboard/events/new"><Plus className="h-4 w-4 mr-1" /> new event</Link>
               </Button>
